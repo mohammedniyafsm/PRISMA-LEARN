@@ -6,17 +6,16 @@ const prisma = new PrismaClient();
 
 app.use(express.json());
 
-// Test route
 app.get("/", (req: Request, res: Response) => {
-  res.send("Server running 🚀");
+  res.send("Server running");
 });
 
-// Create user
+
 app.post("/users", async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+  const { name, email, password } = req.body;
   try {
     const user = await prisma.user.create({
-      data: { username, email, password },
+      data: { name, email, password },
     });
     res.json(user);
   } catch (err) {
@@ -30,6 +29,38 @@ app.get("/users", async (req: Request, res: Response) => {
   res.json(users);
 });
 
+app.post('/todo',async (req:Request,res:Response)=>{
+  const { title,description,user_id } = req.body;
+  const todo = await prisma.todo.create({
+    data : {
+      title : title,
+      description : description,
+      done : false,
+      user_id : user_id
+    }
+  })
+  res.json({todo});
+})
+
+
+app.get('/todo',async (req:Request,res:Response)=>{
+  const todo = await prisma.todo.findMany();
+  res.json({todo});
+})
+
 app.listen(3000, () => {
   console.log("🚀 Server ready at http://localhost:3000");
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
